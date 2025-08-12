@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 const PORT = process.env.WS_PORT ?? 9472;
 
 @Injectable()
-@WebSocketGateway(+PORT, { cors: false })
+@WebSocketGateway(+PORT, { cors: true })
 export class WebsocketGateway {
   @WebSocketServer()
   server: Server;

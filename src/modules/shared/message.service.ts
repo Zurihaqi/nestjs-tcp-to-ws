@@ -10,7 +10,7 @@ export class MessageService {
   constructor(private readonly wsGateway: WebsocketGateway) {}
 
   handleIncomingTcpData(data: Buffer) {
-    const parsed = parseTcpData(data);
+    const parsed = parseTcpData(data); // parsed.raw = 1,2,SG242804138,828-20823-001,02,MY<0x09> | Wed, 06 Aug 2025 14:58:45
 
     const parsedDataSplit = parsed.raw.split(' | ');
     const barcode = parsedDataSplit[0].trim();
@@ -20,16 +20,18 @@ export class MessageService {
 
     if (rawTimestamp) {
       formattedTimestamp = moment(rawTimestamp, 'HH:mm:ss').format(
-        'YYYY-MM-DD_HH:mm:ss'
+        'YYYY-MM-DD_HH-mm-ss'
       );
     }
 
     const payload = {
       barcode: barcode,
-      timestamp: formattedTimestamp
+      filename: formattedTimestamp
     };
 
-    this.wsGateway.broadcastMessage('request-update-dashboard', payload);
-    this.logger.debug(`Emitted ws payload: ${JSON.stringify(payload)}`);
+    const stringifiedPayload = JSON.stringify(payload); // Frontend sudah handle JSON parsing jadi dibuat string lagi...
+
+    this.wsGateway.broadcastMessage('update-dashboard', stringifiedPayload);
+    this.logger.debug(`Emitted ws payload: ${stringifiedPayload}`);
   }
 }
