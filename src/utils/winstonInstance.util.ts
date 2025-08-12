@@ -6,7 +6,7 @@ import * as winston from 'winston';
 import * as path from 'path';
 import moment from 'moment';
 
-const logDir = path.join(__dirname, 'logs');
+const logDir = path.join(process.cwd(), 'logs');
 const logName = `tcp-to-ws_${moment().format('YYYY-MM-DD_HH:mm:ss')}.log`;
 
 const winstonFormat = winston.format.combine(
