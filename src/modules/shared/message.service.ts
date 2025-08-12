@@ -12,6 +12,11 @@ export class MessageService {
   handleIncomingTcpData(data: Buffer) {
     const parsed = parseTcpData(data); // parsed.raw = 1,2,SG242804138,828-20823-001,02,MY<0x09> | Wed, 06 Aug 2025 14:58:45
 
+    if (!parsed.raw.includes(' | ')) {
+      this.logger.debug(`Received invalid data: ${parsed.raw}`);
+      return;
+    }
+
     const parsedDataSplit = parsed.raw.split(' | ');
     const barcode = parsedDataSplit[0].trim();
 
